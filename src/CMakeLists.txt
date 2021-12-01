@@ -1,8 +1,11 @@
+add_subdirectory(api)
+
 set(SRCS
     dummy.c
 )
 set(LIBS
   PRIVATE
+    ${PROJECT_NAME}-api
 )
 
 add_library(${PROJECT_NAME} SHARED ${SRCS})

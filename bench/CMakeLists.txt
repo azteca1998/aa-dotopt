@@ -1,0 +1,16 @@
+set(SRCS
+    main.cpp
+)
+set(LIBS
+  PRIVATE
+    benchmark::benchmark
+)
+
+add_executable(${PROJECT_NAME}-bench ${SRCS})
+target_link_libraries(${PROJECT_NAME}-bench ${LIBS})
+
+add_custom_target(bench
+    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-bench --benchmark_perf_counters=cycles,instructions
+    DEPENDS ${PROJECT_NAME}-bench
+    SOURCES ${SRCS}
+)
