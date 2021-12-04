@@ -4,8 +4,10 @@ project(aa-dotopt C CXX)
 # CMake features.
 enable_testing()
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # Dependencies.
-find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
 
 set(BENCHMARK_ENABLE_LIBPFM ON)
 set(BENCHMARK_ENABLE_TESTING OFF)
