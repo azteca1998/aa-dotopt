@@ -21,6 +21,29 @@ void impl_sequential(PyObject *a, PyObject *b, PyObject *c)
     //   matrix_at(c, 0, 0) = matrix_at(a, 0, 0) + matrix_at(b, 0, 0);
 
     // TODO: Implement algorithm here.
+    int col_a = PyArray_SHAPE(a)[1];
+    int row_a = PyArray_SHAPE(a)[0];
+
+    int col_b = PyArray_SHAPE(b)[1];
+    int row_b = PyArray_SHAPE(b)[0];
+
+    if (col_a == row_b)
+    {
+        
+        for (int a = 0; a < col_b; a++) { // por cada columna de la matriz b
+            
+            for (int i = 0; i < row_a; i++) { // recorremos las filas de a
+                int suma = 0;
+        
+                for (int j = 0; j < col_a; j++)  // Y cada columna de a
+                    suma += matrix_at(a,i,j) * matrix_at(b,j,a); // Multiplicamos y sumamos resultado
+                
+                matrix_at(c,i,a) = suma; // guardamos en c
+            }
+        }          
+    }
+    else
+        printf("Error, tamaños matrices no coinciden");
 
 #undef matrix_at
 #undef IMPL_TYPE
