@@ -27,8 +27,8 @@ void impl_sequential(PyObject *a, PyObject *b, PyObject *c)
     int col_b = PyArray_SHAPE(b)[1];
     int row_b = PyArray_SHAPE(b)[0];
 
-    if (col_a == row_b)
-    {
+   
+    
         
         for (int a = 0; a < col_b; a++) { // por cada columna de la matriz b
             
@@ -41,9 +41,8 @@ void impl_sequential(PyObject *a, PyObject *b, PyObject *c)
                 matrix_at(c,i,a) = suma; // guardamos en c
             }
         }          
-    }
-    else
-        printf("Error, tamaños matrices no coinciden");
+    
+   
 
 #undef matrix_at
 #undef IMPL_TYPE
