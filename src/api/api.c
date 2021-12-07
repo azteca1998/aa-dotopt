@@ -3,13 +3,11 @@
 #undef NO_IMPORT_ARRAY
 #include <numpy/arrayobject.h>
 
-#include "hello.h"
 #include "sequential.h"
 
 
 static struct PyMethodDef methods[] = {
 #ifndef __INTELLISENSE__ // IntelliSense for C/C++ marks this as an error.
-    api_hello,
     api_dot_sequential,
 #endif
     { NULL, NULL, 0, NULL },

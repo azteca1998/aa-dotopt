@@ -3,8 +3,14 @@
 
 #include <numpy/arrayobject.h>
 
+#include "util.h"
 
-void impl_sequential(PyArrayObject *a, PyArrayObject *b, PyArrayObject *c);
+
+DOTOPT_API void impl_sequential(
+    PyArrayObject *a,
+    PyArrayObject *b,
+    PyArrayObject *c
+);
 
 
 #endif /* DOTOPT__IMPL__SEQUENTIAL_H */

@@ -1,6 +1,5 @@
 set(SRCS
     api.c
-    hello.c
     sequential.c
 )
 set(LIBS

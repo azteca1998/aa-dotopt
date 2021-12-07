@@ -6,5 +6,4 @@ function(add_python_test TEST_NAME TEST_MAIN)
     )
 endfunction()
 
-add_python_test(hello hello.py)
 add_python_test(dot_sequential sequential.py)
