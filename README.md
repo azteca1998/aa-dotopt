@@ -4,15 +4,15 @@
 
   1. Update the container.
     
-    `./scripts/update-all.sh`
+    ./scripts/update-all.sh
 
   2. Install the required dependencies.
   
-    `./scripts/install-deps.sh`
+    ./scripts/install-deps.sh
 
   3. Fetch third party libraries
   
-    `./scripts/fetch-libs.sh`
+    ./scripts/fetch-libs.sh
 
 > **WARNING**: Benchmarking requires `SYS_CAP_ADMIN`.
 
@@ -32,6 +32,19 @@ are executed when testing.
 
 Benchmarks are implemented in C/C++ using
 [Google's benchmarking library](https://github.com/google/benchmark).
+
+> Warning: CPU frequency scaling should be disabled during the benchmarks.
+
+```sh
+# To query the current CPU frequency scaler:
+sudo cpupower frequency-info
+
+# To force the CPU to run at full power:
+sudo cpupower frequency-set --governor performance
+
+# To restore the previous CPU fequency scaler profile:
+sudo cpupower frequency-set --governor <previous governor>
+```
 
 ## Algorithm implementations
 

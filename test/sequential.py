@@ -2,36 +2,17 @@ import dotopt
 import numpy as np
 
 
-# TODO: Test (use `dotopt.dot_sequential(a, b)`).
+def run_subtest(name, m, k, n):
+    print(f'Subtest {name}: M, K, N = {m}, {k}, {n}')
+    op_a = np.random.random((m, k)).astype(np.float32)
+    op_b = np.random.random((k, n)).astype(np.float32)
 
-print("Test 1: Matriz 8x8 * 8x8")
-a= np.random.random((8,8)).astype(np.float)
-b= np.random.random((8,8)).astype(np.float)
-
-res_nump = np.dot(a,b)
-
-res_seq=dotopt.dot_sequential(a,b)
-
-print(np.allclose(res_nump,res_seq))
-
-print("Test 2: Matriz 8x8 * 8x12")
-a= np.random.random((8,8)).astype(np.float)
-b= np.random.random((8,12)).astype(np.float)
-
-res_nump = np.dot(a,b)
-
-res_seq=dotopt.dot_sequential(a,b)
-
-print(np.allclose(res_nump,res_seq))
-
-print("Test 3: Matriz 100x200 * 200 * 100")
-a= np.random.random((100,200)).astype(np.float)
-b= np.random.random((200,100)).astype(np.float)
-
-res_nump = np.dot(a,b)
-
-res_seq=dotopt.dot_sequential(a,b)
-
-print(np.allclose(res_nump,res_seq))
+    res_obtained = dotopt.dot_sequential(op_a, op_b)
+    res_expected = np.dot(op_a, op_b)
+    assert np.allclose(res_obtained, res_expected)
+    print('  Success!')
 
 
+run_subtest('A', 8, 8, 8)
+run_subtest('B', 8, 8, 12)
+run_subtest('C', 100, 200, 100)

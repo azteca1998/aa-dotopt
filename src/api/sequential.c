@@ -39,7 +39,11 @@ PyObject *api_dot_sequential_impl(PyObject *self, PyObject *args)
     op_c = PyArray_SimpleNew(2, dims, PyArray_TYPE(op_a));
 
     // Call the implementation.
-    impl_sequential(op_a, op_b, op_c);
+    impl_sequential(
+        (PyArrayObject *) op_a,
+        (PyArrayObject *) op_b,
+        (PyArrayObject *) op_c
+    );
 
     return op_c;
 }
