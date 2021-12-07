@@ -7,7 +7,7 @@ Until: Dec 8 2021
 
 **Tasks**
   - [x] Organize ourselves.
-  - [ ] Implement sequential algorithm in C.
+  - [x] Implement sequential algorithm in C.
     - Glue code (Esteve).
     - Implementation (Max).
-  - [ ] Test sequential algorithm (Max).
+  - [x] Test sequential algorithm (Max).
