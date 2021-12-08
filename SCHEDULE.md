@@ -11,3 +11,13 @@ Until: Dec 8 2021
     - Glue code (Esteve).
     - Implementation (Max).
   - [x] Test sequential algorithm (Max).
+
+## Sprint #2
+
+Since: Dec 8 2021 \
+Until: Dec 15 2021
+
+**Tasks**
+  - [ ] Implement OpenMP parallelism.
+  - [ ] Test OpenMP parallelism.
+  - [ ] Benchmark sequential and OpenMP versions.
