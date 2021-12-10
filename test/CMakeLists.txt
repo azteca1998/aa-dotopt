@@ -6,4 +6,6 @@ function(add_python_test TEST_NAME TEST_MAIN)
     )
 endfunction()
 
+add_python_test(dot_openmp_loops openmp_loops.py)
+add_python_test(dot_openmp_tasks openmp_tasks.py)
 add_python_test(dot_sequential sequential.py)

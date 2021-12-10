@@ -8,6 +8,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 17)
 
 # Dependencies.
+find_package(OpenMP REQUIRED COMPONENTS C)
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
 
 set(BENCHMARK_ENABLE_LIBPFM ON)

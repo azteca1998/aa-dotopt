@@ -1,5 +1,6 @@
 set(SRCS
     api.c
+    openmp.c
     sequential.c
 )
 set(LIBS

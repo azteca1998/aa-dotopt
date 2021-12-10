@@ -1,8 +1,10 @@
 set(SRCS
+    openmp.c
     sequential.c
 )
 set(LIBS
   PRIVATE
+    OpenMP::OpenMP_C
     Python3::Module
     Python3::NumPy
 )
