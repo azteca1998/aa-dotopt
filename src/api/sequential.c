@@ -4,6 +4,7 @@
 #include <numpy/arrayobject.h>
 
 #include "../impl/sequential.h"
+#include "../impl/util.h"
 #include "util.h"
 
 
@@ -11,6 +12,7 @@ PyObject *api_dot_sequential_impl(PyObject *self, PyObject *args)
 {
     PyObject *op_a, *op_b, *op_c;
     npy_intp dims[2];
+    sequential_version_t sv;
     int ret;
 
     /* Extract arguments. */
@@ -28,7 +30,13 @@ PyObject *api_dot_sequential_impl(PyObject *self, PyObject *args)
     op_c = PyArray_SimpleNew(2, dims, PyArray_TYPE(op_a));
 
     /* Call the implementation. */
-    impl_sequential(
+    sv = sv_find_version(
+        sizeof(float),
+        (PyArrayObject *) op_a,
+        (PyArrayObject *) op_b,
+        (PyArrayObject *) op_c
+    );
+    (*impl_sequential[sv])(
         (PyArrayObject *) op_a,
         (PyArrayObject *) op_b,
         (PyArrayObject *) op_c
