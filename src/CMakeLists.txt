@@ -8,6 +8,7 @@ set(LIBS
   PRIVATE
     Python3::Module
     Python3::NumPy
+    Threads::Threads
 
     ${PROJECT_NAME}-api
     ${PROJECT_NAME}-impl

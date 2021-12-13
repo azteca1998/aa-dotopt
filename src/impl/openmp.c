@@ -16,20 +16,18 @@ void impl_openmp_loops(PyArrayObject *a, PyArrayObject *b, PyArrayObject *c)
     size_t k_sz = PyArray_SHAPE(a)[1];          /* Cols of A and rows of B. */
     size_t n_sz = PyArray_SHAPE(b)[1];          /* Cols of B and C.         */
 
-    #pragma omp parallel for shared(a,b,c) private(m,n,k) schedule(static) // test different schedulers, also collapse(2)
-    for (size_t m = 0; m < m_sz; m++) {          /* Iterate over M.          */
-        //prob the major issue will be with mem access
+    #pragma omp parallel for shared(a, b, c) schedule(static) collapse(2)
+    for (size_t m = 0; m < m_sz; m++)           /* Iterate over M.          */
         for (size_t n = 0; n < n_sz; n++)       /* Iterate over N.          */
         {
             value_t acc = (value_t) 0;
+            
+            #pragma omp reduction(+:acc)
             for (size_t k = 0; k < k_sz; k++)   /* Iterate over K.          */
-            #pragma omp reduction(+:acc) //maybe omp critical for th sync
                 acc += matrix_at(a, m, k) * matrix_at(b, k, n);
 
             matrix_at(c, m, n) = acc;
         }
-    }
-    
 
 #undef matrix_at
 #undef IMPL_TYPE
@@ -37,6 +35,7 @@ void impl_openmp_loops(PyArrayObject *a, PyArrayObject *b, PyArrayObject *c)
 
 void impl_openmp_tasks(PyArrayObject *a, PyArrayObject *b, PyArrayObject *c)
 {
+    #if 0
 #define value_t float
 #define matrix_at(m, row, col) \
     (*(value_t *) (PyArray_DATA(m) \
@@ -59,8 +58,10 @@ void impl_openmp_tasks(PyArrayObject *a, PyArrayObject *b, PyArrayObject *c)
 
 #undef matrix_at
 #undef IMPL_TYPE
+    #endif
 }
 
+#if 0
 void MM_DQ ( const PyArrayObject *a, const PyArrayObject *b, PyArrayObject *c, int SZ, const int N){
         // SZ: dimension of submatrices a, b and c. 
         // N:  size of original input matrices (size of a row)
@@ -100,3 +101,4 @@ void MM_DQ ( const PyArrayObject *a, const PyArrayObject *b, PyArrayObject *c, i
         MM_DQ( a+SZ*(N+1), b+SZ*(N+1), c+SZ*(N+1), SZ, N);
         #pragma omp taskwait
     }
+#endif

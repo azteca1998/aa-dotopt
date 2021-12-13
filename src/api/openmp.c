@@ -58,11 +58,11 @@ PyObject *api_dot_openmp_tasks_impl(PyObject *self, PyObject *args)
     op_c = PyArray_SimpleNew(2, dims, PyArray_TYPE(op_a));
 
     /* Call the implementation. */
-    impl_openmp_tasks(
-        (PyArrayObject *) op_a,
-        (PyArrayObject *) op_b,
-        (PyArrayObject *) op_c
-    );
+    // impl_openmp_tasks(
+    //     (PyArrayObject *) op_a,
+    //     (PyArrayObject *) op_b,
+    //     (PyArrayObject *) op_c
+    // );
 
     return op_c;
 }

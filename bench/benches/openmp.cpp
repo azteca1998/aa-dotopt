@@ -1,14 +1,14 @@
-#include "sequential.hpp"
+#include "openmp.hpp"
 
 #include <cstdlib>
 #include <numpy/arrayobject.h>
 #include <Python.h>
 
-#include "../../src/impl/sequential.h"
+#include "../../src/impl/openmp.h"
 #include "../../src/impl/util.h"
 
 
-void bench_sequential(benchmark::State &state)
+void bench_openmp_loops(benchmark::State &state)
 {
     PyObject *a, *b, *c;
     npy_intp tmp_dims[2];
@@ -36,7 +36,7 @@ void bench_sequential(benchmark::State &state)
     benchmark::ClobberMemory();
 
     for (auto _ : state)
-        (*impl_sequential[sv])(
+        impl_openmp_loops(
             reinterpret_cast<PyArrayObject *>(a),
             reinterpret_cast<PyArrayObject *>(b),
             reinterpret_cast<PyArrayObject *>(c)

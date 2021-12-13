@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 # Dependencies.
 find_package(OpenMP REQUIRED COMPONENTS C)
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
+find_package(Threads REQUIRED)
 
 set(BENCHMARK_ENABLE_LIBPFM ON)
 set(BENCHMARK_ENABLE_TESTING OFF)
