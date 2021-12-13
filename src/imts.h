@@ -49,6 +49,9 @@ typedef struct imts
     ssize_t pos_n;
 
     imts_state_t state;
+    uint8_t parent_is_zero_fill;
+    uint8_t next_is_zero_fill;
+
     uint8_t dir_k;
     uint8_t dir_n;
 
@@ -70,7 +73,7 @@ void imts_initialize_child(
     size_t tile_size
 );
 
-int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n);
+int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n, uint8_t *zf);
 
 
 #endif /* DOTOPT__IMTS_H */

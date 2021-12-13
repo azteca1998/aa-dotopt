@@ -1,14 +1,13 @@
-#include "sequential.hpp"
+#include "imts.hpp"
 
 #include <cstdlib>
 #include <numpy/arrayobject.h>
 #include <Python.h>
 
-#include "../../src/impl/sequential.h"
-#include "../../src/impl/util.h"
+#include "../../src/impl/imts.h"
 
 
-void bench_sequential(benchmark::State &state)
+void bench_imts(benchmark::State &state)
 {
     PyObject *a, *b, *c;
     npy_intp tmp_dims[2];
@@ -36,11 +35,10 @@ void bench_sequential(benchmark::State &state)
     benchmark::ClobberMemory();
 
     for (auto _ : state)
-        (*impl_sequential[sv])(
+        impl_imts(
             reinterpret_cast<PyArrayObject *>(a),
             reinterpret_cast<PyArrayObject *>(b),
-            reinterpret_cast<PyArrayObject *>(c),
-            1
+            reinterpret_cast<PyArrayObject *>(c)
         );
 
     benchmark::ClobberMemory();

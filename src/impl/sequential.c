@@ -12,7 +12,8 @@
     static void name( \
         PyArrayObject *a, \
         PyArrayObject *b, \
-        PyArrayObject *c \
+        PyArrayObject *c, \
+        int zero_fill \
     ) \
     { \
         const size_t m_sz = PyArray_SHAPE(a)[0]; /* Rows of A & C.         */ \
@@ -22,7 +23,7 @@
         for (size_t m = 0; m < m_sz; m++) \
             for (size_t k = 0; k < k_sz; k++) \
             { \
-                if (k == 0) \
+                if (zero_fill && k == 0) \
                     for (size_t n = 0; n < n_sz; n++) \
                         matrix_at(c, m, n) = (value_t) 0; \
                 \
@@ -36,7 +37,8 @@
     static void name( \
         PyArrayObject *a, \
         PyArrayObject *b, \
-        PyArrayObject *c \
+        PyArrayObject *c, \
+        int zero_fill \
     ) \
     { \
         const size_t m_sz = PyArray_SHAPE(a)[0]; /* Rows of A & C.         */ \
@@ -46,7 +48,8 @@
         for (size_t m = 0; m < m_sz; m++) \
             for (size_t n = 0; n < n_sz; n++) \
             { \
-                matrix_at(c, m, n) = (value_t) 0; \
+                if (zero_fill) \
+                    matrix_at(c, m, n) = (value_t) 0; \
                 \
                 for (size_t k = 0; k < k_sz; k++) \
                     matrix_at(c, m, n) += \
@@ -59,7 +62,8 @@
     static void name( \
         PyArrayObject *a, \
         PyArrayObject *b, \
-        PyArrayObject *c \
+        PyArrayObject *c, \
+        int zero_fill \
     ) \
     { \
         const size_t m_sz = PyArray_SHAPE(a)[0]; /* Rows of A & C.         */ \
@@ -69,7 +73,7 @@
         for (size_t n = 0; n < n_sz; n++) \
             for (size_t k = 0; k < k_sz; k++) \
             { \
-                if (k == 0) \
+                if (zero_fill && k == 0) \
                     for (size_t m = 0; m < m_sz; m++) \
                         matrix_at(c, m, n) = (value_t) 0; \
                 \
@@ -84,7 +88,8 @@
     static void name( \
         PyArrayObject *a, \
         PyArrayObject *b, \
-        PyArrayObject *c \
+        PyArrayObject *c, \
+        int zero_fill \
     ) \
     { \
         const size_t m_sz = PyArray_SHAPE(a)[0]; /* Rows of A & C.         */ \
@@ -94,7 +99,8 @@
         for (size_t n = 0; n < n_sz; n++) \
             for (size_t m = 0; m < m_sz; m++) \
             { \
-                matrix_at(c, m, n) = (value_t) 0; \
+                if (zero_fill) \
+                    matrix_at(c, m, n) = (value_t) 0; \
                 \
                 for (size_t k = 0; k < k_sz; k++) \
                     matrix_at(c, m, n) += \
@@ -107,7 +113,8 @@
     static void name( \
         PyArrayObject *a, \
         PyArrayObject *b, \
-        PyArrayObject *c \
+        PyArrayObject *c, \
+        int zero_fill \
     ) \
     { \
         const size_t m_sz = PyArray_SHAPE(a)[0]; /* Rows of A & C.         */ \
@@ -117,7 +124,7 @@
         for (size_t k = 0; k < k_sz; k++) \
             for (size_t m = 0; m < m_sz; m++) \
             { \
-                if (k == 0) \
+                if (zero_fill && k == 0) \
                     for (size_t n = 0; n < n_sz; n++) \
                         matrix_at(c, m, n) = (value_t) 0; \
                 \
@@ -132,7 +139,8 @@
     static void name( \
         PyArrayObject *a, \
         PyArrayObject *b, \
-        PyArrayObject *c \
+        PyArrayObject *c, \
+        int zero_fill \
     ) \
     { \
         const size_t m_sz = PyArray_SHAPE(a)[0]; /* Rows of A & C.         */ \
@@ -142,7 +150,7 @@
         for (size_t k = 0; k < k_sz; k++) \
             for (size_t n = 0; n < n_sz; n++) \
             { \
-                if (k == 0) \
+                if (zero_fill && k == 0) \
                     for (size_t m = 0; m < m_sz; m++) \
                         matrix_at(c, m, n) = (value_t) 0; \
                 \

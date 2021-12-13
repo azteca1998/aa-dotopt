@@ -1,18 +1,16 @@
-#include "sequential.h"
+#include "openmp.h"
 
 #include <assert.h>
 #include <numpy/arrayobject.h>
 
-#include "../impl/sequential.h"
-#include "../impl/util.h"
+#include "../impl/imts.h"
 #include "util.h"
 
 
-PyObject *api_dot_sequential_impl(PyObject *self, PyObject *args)
+PyObject *api_dot_imts_impl(PyObject *self, PyObject *args)
 {
     PyObject *op_a, *op_b, *op_c;
     npy_intp dims[2];
-    sequential_version_t sv;
     int ret;
 
     /* Extract arguments. */
@@ -30,17 +28,10 @@ PyObject *api_dot_sequential_impl(PyObject *self, PyObject *args)
     op_c = PyArray_SimpleNew(2, dims, PyArray_TYPE(op_a));
 
     /* Call the implementation. */
-    sv = sv_find_version(
-        sizeof(float),
+    impl_imts(
         (PyArrayObject *) op_a,
         (PyArrayObject *) op_b,
         (PyArrayObject *) op_c
-    );
-    (*impl_sequential[sv])(
-        (PyArrayObject *) op_a,
-        (PyArrayObject *) op_b,
-        (PyArrayObject *) op_c,
-        1
     );
 
     return op_c;

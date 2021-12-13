@@ -29,6 +29,8 @@ void imts_initialize_root(
     self->pos_n = self->since_n;            /* Initial n value.      */
 
     self->state = is_ready;                 /* Tiler is ready.       */
+    self->next_is_zero_fill = 1;
+    self->parent_is_zero_fill = 1;
     self->dir_k = 0;                        /* 0 -> +1.              */
     self->dir_n = 0;                        /* 0 -> +1.              */
 
@@ -59,6 +61,8 @@ void imts_initialize_child(
     self->pos_n = 0;                        /* Will be overwritten.  */
 
     self->state = is_needs_work;            /* Fetch from parent.    */
+    self->next_is_zero_fill = 0;            /* Will be overwritten.  */
+    self->parent_is_zero_fill = 0;          /* Will be overwritten.  */
     self->dir_k = 0;                        /* Will be overwritten.  */
     self->dir_n = 0;                        /* Will be overwritten.  */
 
@@ -66,7 +70,7 @@ void imts_initialize_child(
 }
 
 // TODO: Guard critical section for threaded versions.
-int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n)
+int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n, uint8_t *zf)
 {
     assert(self != NULL);
 
@@ -85,7 +89,8 @@ int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n)
             self->parent,
             &self->pos_m,
             &self->pos_k,
-            &self->pos_n
+            &self->pos_n,
+            &self->parent_is_zero_fill
         ) == 0)
             goto done;
 
@@ -107,12 +112,21 @@ int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n)
             self->parent->until_n
         );
         #undef min
+
+        self->dir_k = 0;
+        self->dir_n = 0;
+
+        self->next_is_zero_fill = 1;
     }
 
     // Assign work.
     *m = self->pos_m;
     *k = self->pos_k;
     *n = self->pos_n;
+    if (self->parent_is_zero_fill && zf != NULL)
+        *zf = self->next_is_zero_fill;
+
+    self->next_is_zero_fill = 0;
 
     // Iterate over K.
     self->pos_k += !self->dir_k
@@ -133,6 +147,7 @@ int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n)
             : -self->tile_size;
 
         self->dir_k = !self->dir_k;
+        self->next_is_zero_fill = 1;
     }
 
     // Iterate over M.

@@ -2,10 +2,14 @@
 #include <numpy/arrayobject.h>
 #include <Python.h>
 
+#include "benches/imts.hpp"
 #include "benches/openmp.hpp"
 #include "benches/sequential.hpp"
 
 
+BENCHMARK(bench_imts)
+    ->RangeMultiplier(2)
+    ->Range(8, 16384);
 BENCHMARK(bench_openmp_loops)
     ->RangeMultiplier(2)
     ->Range(8, 16384);

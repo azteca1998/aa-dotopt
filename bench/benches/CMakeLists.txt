@@ -1,4 +1,5 @@
 set(SRCS
+    imts.cpp
     openmp.cpp
     sequential.cpp
 )
@@ -7,7 +8,7 @@ set(LIBS
     Python3::NumPy
     Python3::Python
 
-    ${PROJECT_NAME}-impl
+    ${PROJECT_NAME}
 )
 
 add_library(${PROJECT_NAME}-bench-benches STATIC ${SRCS})

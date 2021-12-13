@@ -6,7 +6,12 @@
 #include "util.h"
 
 
-typedef void (*impl_func_t)(PyArrayObject *, PyArrayObject *, PyArrayObject *);
+typedef void (*impl_func_t)(
+    PyArrayObject *a,
+    PyArrayObject *b,
+    PyArrayObject *c,
+    int zero_fill
+);
 
 /**
  * @brief Matrix multiplication using NumPy arrays.
