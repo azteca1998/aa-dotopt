@@ -13,6 +13,9 @@ BENCHMARK(bench_imts)
 BENCHMARK(bench_openmp_loops)
     ->RangeMultiplier(2)
     ->Range(8, 16384);
+BENCHMARK(bench_openmp_tasks)
+    ->RangeMultiplier(2)
+    ->Range(8, 16384);
 BENCHMARK(bench_sequential)
     ->RangeMultiplier(2)
     ->Range(8, 16384);

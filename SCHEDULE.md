@@ -18,6 +18,14 @@ Since: Dec 8 2021 \
 Until: Dec 15 2021
 
 **Tasks**
-  - [ ] Implement OpenMP parallelism.
-  - [ ] Test OpenMP parallelism.
-  - [ ] Benchmark sequential and OpenMP versions.
+  - [x] Implement OpenMP parallelism.
+  - [x] Test OpenMP parallelism.
+  - [x] Benchmark sequential and OpenMP versions.
+
+## Sprint #3
+
+Since: Dec 15 2021 \
+Until: Dec 22 2021
+
+**Tasks**
+  - [ ] ???

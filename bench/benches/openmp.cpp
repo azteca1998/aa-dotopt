@@ -49,3 +49,45 @@ void bench_openmp_loops(benchmark::State &state)
     Py_DECREF(b);
     Py_DECREF(c);
 }
+
+void bench_openmp_tasks(benchmark::State &state)
+{
+    PyObject *a, *b, *c;
+    npy_intp tmp_dims[2];
+
+    tmp_dims[0] = state.range();
+    tmp_dims[1] = state.range();
+
+    a = PyArray_SimpleNew(2, tmp_dims, PyArray_FLOAT32);
+    b = PyArray_SimpleNew(2, tmp_dims, PyArray_FLOAT32);
+    c = PyArray_SimpleNew(2, tmp_dims, PyArray_FLOAT32);
+
+    for (size_t i = 0; i < state.range() * state.range(); i++)
+    {
+        ((float *) PyArray_DATA(a))[i] = (float) drand48() - 0.5f;
+        ((float *) PyArray_DATA(b))[i] = (float) drand48() - 0.5f;
+    }
+
+    sequential_version_t sv = sv_find_version(
+        sizeof(float),
+        reinterpret_cast<PyArrayObject *>(a),
+        reinterpret_cast<PyArrayObject *>(b),
+        reinterpret_cast<PyArrayObject *>(c)
+    );
+
+    benchmark::ClobberMemory();
+
+    for (auto _ : state)
+        impl_openmp_tasks(
+            reinterpret_cast<PyArrayObject *>(a),
+            reinterpret_cast<PyArrayObject *>(b),
+            reinterpret_cast<PyArrayObject *>(c)
+        );
+
+    benchmark::ClobberMemory();
+
+    // Clean up.
+    Py_DECREF(a);
+    Py_DECREF(b);
+    Py_DECREF(c);
+}
