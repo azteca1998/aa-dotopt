@@ -1,6 +1,44 @@
 \chapter{Algorithm analysis}
 
 
-\section{Sample section}
+\section{Sequential algorithm}
 
-\subsection{Sample subsection}
+Matrix multiplication can be thought of as a sequential algorithm, as it is
+taught in schools:
+
+$
+\begin{pmatrix}
+    a_{11} & a_{12} & a_{13} & a_{14} \\
+    a_{21} & a_{22} & a_{23} & a_{24} \\
+    a_{31} & a_{32} & a_{33} & a_{34} \\
+    a_{41} & a_{42} & a_{43} & a_{44}
+\end{pmatrix}
+\cdot
+\begin{pmatrix}
+    b_{11} & b_{12} & b_{13} & b_{14} \\
+    b_{21} & b_{22} & b_{23} & b_{24} \\
+    b_{31} & b_{32} & b_{33} & b_{34} \\
+    b_{41} & b_{42} & b_{43} & b_{44}
+\end{pmatrix}
+= \\
+=
+\begin{pmatrix}
+    \sum_{k=1}^{4} a_{1k}b_{k1} & \sum_{k=1}^{4} a_{1k}b_{k2} & \sum_{k=1}^{4} a_{1k}b_{k3} & \sum_{k=1}^{4} a_{1k}b_{k4} \\
+    \sum_{k=1}^{4} a_{2k}b_{k1} & \sum_{k=1}^{4} a_{2k}b_{k2} & \sum_{k=1}^{4} a_{2k}b_{k3} & \sum_{k=1}^{4} a_{2k}b_{k4} \\
+    \sum_{k=1}^{4} a_{3k}b_{k1} & \sum_{k=1}^{4} a_{3k}b_{k2} & \sum_{k=1}^{4} a_{3k}b_{k3} & \sum_{k=1}^{4} a_{3k}b_{k4} \\
+    \sum_{k=1}^{4} a_{4k}b_{k1} & \sum_{k=1}^{4} a_{4k}b_{k2} & \sum_{k=1}^{4} a_{4k}b_{k3} & \sum_{k=1}^{4} a_{4k}b_{k4}
+\end{pmatrix}
+$
+
+This algorithm has $O(n^3)$ complexity, which cannot be reduced easily since no
+operations are repeated.
+
+    Some methods for reducing its complexity use algebra to reduce the number of
+multiplications needed, while increasing the number of additions. This might
+have been relevant for older architectures, but on our hardware both additions
+and multiplications have the same throughput and latency, and therefore those
+optimizations are useless.
+
+
+
+\section{Recursive algorithm}

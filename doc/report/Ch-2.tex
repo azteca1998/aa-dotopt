@@ -2,11 +2,41 @@
 
 
 \section{Python's C API}
-\begin{lstlisting}[language=Python]
-    print('Hello world!')
-    for i in range(100):
-        print(i)
+
+    Python's runtime is written in C, and it exposes an API to interact with it.
+Using that api, it's perfectly possible to use Python without writing a single
+line of Python.
+
+    In our case, the Python C API allows us to write fast code in C and
+compatible languages, while still having the ease of use that Python provides.
+
+    The same approach is used by NumPy, the numerical Python library. It is
+implemented in C while being usable from within Python with impressive results.
+
+    There are two main ways to interact between C and Python: embedding and
+making a module. In this project we use both, but embedding is only used when
+benchmarking.
+
+    Making a module is as simple as declaring an exported function with a
+specific name, which creates the module that will be used by Python:
+
+\begin{lstlisting}[language=C]
+    static struct PyModuleDef module = {
+        PyModuleDef_HEAD_INIT,
+        .m_name = "dotopt",
+        .m_doc = "",
+        .m_size = -1,
+        .m_methods = methods,
+    };
+
+    PyMODINIT_FUNC PyInit_dotopt()
+    {
+        return PyModule_Create(&module);
+    }
 \end{lstlisting}
+
+    To use NumPy from C, it must also be initialized from within the module, so
+the initialization function 
 
 
 \section{Benchmarking}
