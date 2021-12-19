@@ -6,7 +6,7 @@
 #include "util.h"
 
 
-typedef void (*impl_func_t)(
+typedef void (*impl_sequential_t)(
     PyArrayObject *a,
     PyArrayObject *b,
     PyArrayObject *c,
@@ -20,7 +20,7 @@ typedef void (*impl_func_t)(
  * @param b Right operand.
  * @param c Output array.
  */
-extern const impl_func_t impl_sequential[27];
+extern const impl_sequential_t impl_sequential[27];
 
 
 #endif /* DOTOPT__IMPL__SEQUENTIAL_H */

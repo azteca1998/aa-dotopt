@@ -194,7 +194,7 @@ _impl_sequential_knm(impl_sequential_knm,
 )
 
 
-const impl_func_t impl_sequential[27] = {
+const impl_sequential_t impl_sequential[27] = {
     &impl_sequential_nkm, /* nkm, knm; nkm is 4-5% better */
     &impl_sequential_mkn, /* FIXME: WTF */
     &impl_sequential_mkn, /* TODO: Complex arrays. */

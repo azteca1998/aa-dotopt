@@ -2,11 +2,15 @@
 #include <numpy/arrayobject.h>
 #include <Python.h>
 
+#include "benches/asm.hpp"
 #include "benches/imts.hpp"
 #include "benches/openmp.hpp"
 #include "benches/sequential.hpp"
 
 
+BENCHMARK(bench_asm)
+    ->RangeMultiplier(2)
+    ->Range(8, 16384);
 BENCHMARK(bench_imts)
     ->RangeMultiplier(2)
     ->Range(8, 16384);

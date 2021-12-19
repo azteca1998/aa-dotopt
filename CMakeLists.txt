@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project(aa-dotopt C CXX)
+project(aa-dotopt ASM C CXX)
 
 # CMake features.
 enable_testing()

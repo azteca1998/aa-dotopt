@@ -1,5 +1,6 @@
 set(SRCS
     api.c
+    asm.c
     imts.c
     openmp.c
     sequential.c

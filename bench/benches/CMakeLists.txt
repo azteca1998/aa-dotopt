@@ -1,4 +1,5 @@
 set(SRCS
+    asm.cpp
     imts.cpp
     openmp.cpp
     sequential.cpp

@@ -2,7 +2,6 @@ import dotopt
 import numpy as np
 
 
-# Use `dotopt.dot_openmp_tasks()`.
 def run_subtest(name, m, k, n):
     print(f'Subtest {name}: M, K, N = {m}, {k}, {n}')
     op_a = np.random.random((m, k)).astype(np.float32)
