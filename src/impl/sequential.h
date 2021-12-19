@@ -14,8 +14,8 @@ typedef void (*impl_sequential_t)(
 );
 
 /**
- * @brief Matrix multiplication using NumPy arrays.
- * 
+ * @brief Sequential matrix multiplication using nested loops.
+ *
  * @param a Left operand.
  * @param b Right operand.
  * @param c Output array.

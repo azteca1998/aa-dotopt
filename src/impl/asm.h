@@ -12,6 +12,16 @@ typedef void (*impl_asm_t)(
 );
 
 
+/**
+ * @brief Sequential matrix multiplication using nested loops of 8×8 tiles.
+ *
+ * Each tile multiplication is implemented in assembler. Margins, when present,
+ * are calculated from within C using nested bucles.
+ *
+ * @param a Left operand.
+ * @param b Right operand.
+ * @param c Output array.
+ */
 extern const impl_asm_t impl_asm[27];
 
 

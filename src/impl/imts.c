@@ -29,10 +29,9 @@ DOTOPT_API void impl_imts(
     index_b = PyTuple_New(2);
     index_c = PyTuple_New(2);
 
-    imts_initialize_root(&imts[3], a, b, c, 512);
-    imts_initialize_child(&imts[2], &imts[3], 128);
-    imts_initialize_child(&imts[1], &imts[2], 32);
-    imts_initialize_child(&imts[0], &imts[1], 8);
+    imts_initialize_root(&imts[2], a, b, c, 512);
+    imts_initialize_child(&imts[1], &imts[2], 128);
+    imts_initialize_child(&imts[0], &imts[1], 32);
 
     while (imts_get_work(&imts[0], &m, &k, &n, &zf))
     {
