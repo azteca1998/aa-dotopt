@@ -3,19 +3,14 @@
 #undef NO_IMPORT_ARRAY
 #include <numpy/arrayobject.h>
 
-#include "asm.h"
-#include "imts.h"
-#include "openmp.h"
 #include "sequential.h"
+#include "sequential_asm.h"
 
 
 static struct PyMethodDef methods[] = {
 #ifndef __INTELLISENSE__ // IntelliSense for C/C++ marks this as an error.
-    api_dot_asm,
-    api_dot_imts,
-    api_dot_openmp_loops,
-    api_dot_openmp_tasks,
     api_dot_sequential,
+    api_dot_sequential_asm,
 #endif
     { NULL, NULL, 0, NULL },
 };

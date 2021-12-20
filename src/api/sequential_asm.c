@@ -3,12 +3,12 @@
 #include <assert.h>
 #include <numpy/arrayobject.h>
 
-#include "../impl/sequential.h"
+#include "../impl/sequential_asm.h"
 #include "../impl/util.h"
 #include "util.h"
 
 
-PyObject *api_dot_sequential_impl(PyObject *self, PyObject *args)
+PyObject *api_dot_sequential_asm_impl(PyObject *self, PyObject *args)
 {
     PyArrayObject *op_a, *op_b, *op_c;
     npy_intp dims[2];
@@ -48,7 +48,7 @@ PyObject *api_dot_sequential_impl(PyObject *self, PyObject *args)
     c.col_stride = PyArray_STRIDE(op_c, 1);
 
     sv = sv_find_version(sizeof(float), &a, &b, &c);
-    (*impl_sequential[sv])(&a, &b, &c, 1);
+    (*impl_sequential_asm[sv])(&a, &b, &c, 1);
 
     return (PyObject *) op_c;
 }

@@ -1,12 +1,12 @@
-#include "sequential.hpp"
+#include "sequential_asm.hpp"
 
 #include <cstdlib>
 
-#include "../../src/impl/sequential.h"
+#include "../../src/impl/sequential_asm.h"
 #include "../../src/impl/util.h"
 
 
-void bench_sequential(benchmark::State &state)
+void bench_sequential_asm(benchmark::State &state)
 {
     matrix_t a, b, c;
 
@@ -39,7 +39,7 @@ void bench_sequential(benchmark::State &state)
     benchmark::ClobberMemory();
 
     for (auto _ : state)
-        (*impl_sequential[sv])(&a, &b, &c, 1);
+        (*impl_sequential_asm[sv])(&a, &b, &c, 1);
 
     benchmark::ClobberMemory();
 

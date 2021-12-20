@@ -31,8 +31,8 @@
 .endm
 
 
-.global _impl_asm_x1_x1_x1
-_impl_asm_x1_x1_x1:
+.global _impl_sequential_asm_x1_x1_x1
+_impl_sequential_asm_x1_x1_x1:
     # rdi :: float *ptr_a
     # rsi :: float *ptr_b
     # rdx :: float *ptr_c
@@ -65,7 +65,7 @@ _impl_asm_x1_x1_x1:
     bcast       (rdi + 4 * rcx), rcx
     dot_muladd  ymm4,   ymm5,   ymm6,   ymm7
 
-  _impl_asm_x1_x1_x1_zfcont:
+  _impl_sequential_asm_x1_x1_x1_zfcont:
     lea         rax,    [rsi + r8]
     vmovups     ymm12,  [rax]
     bcast       rdi + 0x04, rcx
@@ -136,8 +136,8 @@ _impl_asm_x1_x1_x1:
     ret
 
 
-.global _impl_asm_x1_x1_x1_zf
-_impl_asm_x1_x1_x1_zf:
+.global _impl_sequential_asm_x1_x1_x1_zf
+_impl_sequential_asm_x1_x1_x1_zf:
     # rdi :: float *ptr_a
     # rsi :: float *ptr_b
     # rdx :: float *ptr_c
@@ -153,4 +153,4 @@ _impl_asm_x1_x1_x1_zf:
     bcast       (rdi + 4 * rcx), rcx
     dot_mul     ymm4,   ymm5,   ymm6,   ymm7
 
-    jmp     _impl_asm_x1_x1_x1_zfcont
+    jmp     _impl_sequential_asm_x1_x1_x1_zfcont

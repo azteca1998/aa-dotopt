@@ -1,7 +1,6 @@
 #ifndef DOTOPT__IMPL__UTIL_H
 #define DOTOPT__IMPL__UTIL_H
 
-#include <numpy/arrayobject.h>
 #include <stddef.h>
 
 
@@ -10,6 +9,17 @@
 #else
 # define DOTOPT_API extern "C"
 #endif
+
+
+typedef struct matrix {
+    void *data;
+
+    size_t num_rows;
+    size_t num_cols;
+
+    size_t row_stride;
+    size_t col_stride;
+} matrix_t;
 
 
 /**
@@ -77,9 +87,9 @@ typedef enum sequential_version
  */
 DOTOPT_API sequential_version_t sv_find_version(
     size_t value_size,
-    PyArrayObject *a,
-    PyArrayObject *b,
-    PyArrayObject *c
+    matrix_t *a,
+    matrix_t *b,
+    matrix_t *c
 );
 
 
