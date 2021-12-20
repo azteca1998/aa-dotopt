@@ -1,16 +1,19 @@
-#include "openmp.h"
+#include "imts.h"
 
 #include <assert.h>
 #include <numpy/arrayobject.h>
 
 #include "../impl/imts.h"
+#include "../impl/util.h"
 #include "util.h"
 
 
-PyObject *api_dot_imts_impl(PyObject *self, PyObject *args)
+PyObject *api_dot_imts_sequential_impl(PyObject *self, PyObject *args)
 {
-    PyObject *op_a, *op_b, *op_c;
+    PyArrayObject *op_a, *op_b, *op_c;
     npy_intp dims[2];
+    sequential_version_t sv;
+    matrix_t a, b, c;
     int ret;
 
     /* Extract arguments. */
@@ -25,14 +28,72 @@ PyObject *api_dot_imts_impl(PyObject *self, PyObject *args)
     /* Allocate output array. */
     dims[0] = PyArray_DIM(op_a, 0);
     dims[1] = PyArray_DIM(op_b, 1);
-    op_c = PyArray_SimpleNew(2, dims, PyArray_TYPE(op_a));
+    op_c = (PyArrayObject *) PyArray_SimpleNew(2, dims, PyArray_TYPE(op_a));
 
     /* Call the implementation. */
-    impl_imts(
-        (PyArrayObject *) op_a,
-        (PyArrayObject *) op_b,
-        (PyArrayObject *) op_c
-    );
+    a.data = PyArray_DATA(op_a);
+    a.num_rows = PyArray_SHAPE(op_a)[0];
+    a.num_cols = PyArray_SHAPE(op_a)[1];
+    a.row_stride = PyArray_STRIDE(op_a, 0);
+    a.col_stride = PyArray_STRIDE(op_a, 1);
+    b.data = PyArray_DATA(op_b);
+    b.num_rows = PyArray_SHAPE(op_b)[0];
+    b.num_cols = PyArray_SHAPE(op_b)[1];
+    b.row_stride = PyArray_STRIDE(op_b, 0);
+    b.col_stride = PyArray_STRIDE(op_b, 1);
+    c.data = PyArray_DATA(op_c);
+    c.num_rows = PyArray_SHAPE(op_c)[0];
+    c.num_cols = PyArray_SHAPE(op_c)[1];
+    c.row_stride = PyArray_STRIDE(op_c, 0);
+    c.col_stride = PyArray_STRIDE(op_c, 1);
 
-    return op_c;
+    sv = sv_find_version(sizeof(float), &a, &b, &c);
+    (*impl_imts_sequential[sv])(&a, &b, &c, 1);
+
+    return (PyObject *) op_c;
+}
+
+PyObject *api_dot_imts_sequential_asm_impl(PyObject *self, PyObject *args)
+{
+    PyArrayObject *op_a, *op_b, *op_c;
+    npy_intp dims[2];
+    sequential_version_t sv;
+    matrix_t a, b, c;
+    int ret;
+
+    /* Extract arguments. */
+    ret = PyArg_ParseTuple(args, "O!O!",
+                           &PyArray_Type, &op_a,
+                           &PyArray_Type, &op_b);
+    _assert(ret, PyExc_RuntimeError, "Failed to extract method arguments.");
+
+    /* Ensure operands compatibility. */
+    _assert_checks(op_a, op_b);
+
+    /* Allocate output array. */
+    dims[0] = PyArray_DIM(op_a, 0);
+    dims[1] = PyArray_DIM(op_b, 1);
+    op_c = (PyArrayObject *) PyArray_SimpleNew(2, dims, PyArray_TYPE(op_a));
+
+    /* Call the implementation. */
+    a.data = PyArray_DATA(op_a);
+    a.num_rows = PyArray_SHAPE(op_a)[0];
+    a.num_cols = PyArray_SHAPE(op_a)[1];
+    a.row_stride = PyArray_STRIDE(op_a, 0);
+    a.col_stride = PyArray_STRIDE(op_a, 1);
+    b.data = PyArray_DATA(op_b);
+    b.num_rows = PyArray_SHAPE(op_b)[0];
+    b.num_cols = PyArray_SHAPE(op_b)[1];
+    b.row_stride = PyArray_STRIDE(op_b, 0);
+    b.col_stride = PyArray_STRIDE(op_b, 1);
+    c.data = PyArray_DATA(op_c);
+    c.num_rows = PyArray_SHAPE(op_c)[0];
+    c.num_cols = PyArray_SHAPE(op_c)[1];
+    c.row_stride = PyArray_STRIDE(op_c, 0);
+    c.col_stride = PyArray_STRIDE(op_c, 1);
+
+    sv = sv_find_version(sizeof(float), &a, &b, &c);
+    (*impl_imts_sequential_asm[sv])(&a, &b, &c, 1);
+
+    return (PyObject *) op_c;
 }

@@ -3,12 +3,15 @@
 #undef NO_IMPORT_ARRAY
 #include <numpy/arrayobject.h>
 
+#include "imts.h"
 #include "sequential.h"
 #include "sequential_asm.h"
 
 
 static struct PyMethodDef methods[] = {
 #ifndef __INTELLISENSE__ // IntelliSense for C/C++ marks this as an error.
+    api_dot_imts_sequential,
+    api_dot_imts_sequential_asm,
     api_dot_sequential,
     api_dot_sequential_asm,
 #endif

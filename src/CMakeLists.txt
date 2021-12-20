@@ -14,14 +14,12 @@ set(LIBS
     ${PROJECT_NAME}-impl
 )
 
-add_library(${PROJECT_NAME} SHARED ${SRCS})
+add_library(${PROJECT_NAME} STATIC ${SRCS})
 target_link_libraries(${PROJECT_NAME} ${LIBS})
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-    -DPY_ARRAY_UNIQUE_SYMBOL=dotopt_api
-    -DNO_IMPORT_ARRAY
-    -DNPY_NO_DEPRECATED_API
-)
-set_target_properties(${PROJECT_NAME} PROPERTIES
+
+add_library(${PROJECT_NAME}-pylib SHARED ${SRCS})
+target_link_libraries(${PROJECT_NAME}-pylib ${LIBS})
+set_target_properties(${PROJECT_NAME}-pylib PROPERTIES
     PREFIX ""
     OUTPUT_NAME "dotopt"
     LINKER_LANGUAGE C

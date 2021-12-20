@@ -1,95 +1,189 @@
 #include "imts.h"
 
-#include <time.h>
+#include <stdlib.h>
 
 #include "../imts.h"
 #include "sequential.h"
+#include "sequential_asm.h"
 
 
-#define value_t float
+static void impl_x1_x1_x1(matrix_t *a, matrix_t *b, matrix_t *c, int zero_fill)
+{
+    size_t m, k, n;
+    matrix_t ta, tb, tc;
+    imts_t imts[3];
+
+    imts_init_root(&imts[2], a, b, c, 512, zero_fill, 0);
+    imts_init_child(&imts[1], &imts[2], 128, 0);
+    imts_init_child(&imts[0], &imts[1], 32, 0);
+
+    ta.row_stride = a->row_stride;
+    ta.col_stride = a->col_stride;
+    tb.row_stride = b->row_stride;
+    tb.col_stride = b->col_stride;
+    tc.row_stride = c->row_stride;
+    tc.col_stride = c->col_stride;
+
+    while (imts_get_work(&imts[0], &m, &k, &n, &zero_fill))
+    {
+        ta.data = &((float *) (a->data + m * a->row_stride))[k];
+        tb.data = &((float *) (b->data + k * b->row_stride))[n];
+        tc.data = &((float *) (c->data + m * c->row_stride))[n];
+
+        ta.num_rows = imts[0].tile_size;
+        ta.num_cols = imts[0].tile_size;
+        tb.num_cols = imts[0].tile_size;
+        if (m + ta.num_rows > imts[0].until_m)
+            ta.num_rows = imts[0].until_m - m;
+        if (k + ta.num_cols > imts[0].until_k)
+            ta.num_cols = imts[0].until_k - k;
+        if (n + tb.num_cols > imts[0].until_n)
+            tb.num_cols = imts[0].until_n - n;
+
+        tb.num_rows = ta.num_cols;
+        tc.num_rows = ta.num_rows;
+        tc.num_cols = tb.num_cols;
+
+        (*impl_sequential[sv_x1_x1_x1])(&ta, &tb, &tc, zero_fill);
+    }
+}
 
 
-DOTOPT_API void impl_imts(
-    PyArrayObject *a,
-    PyArrayObject *b,
-    PyArrayObject *c
+static void impl_x1_x1_x1_asm(
+    matrix_t *a,
+    matrix_t *b,
+    matrix_t *c,
+    int zero_fill
 )
 {
-    imts_t imts[4];
-    sequential_version_t sv;
-    PyObject *slice_m, *slice_k, *slice_n;
-    PyObject *index_a, *index_b, *index_c;
-    PyObject *t0, *t1;
     size_t m, k, n;
-    uint8_t zf;
+    matrix_t ta, tb, tc;
+    imts_t imts[4];
+    _impl_asm_t *impl_ptr;
 
-    sv = sv_find_version(sizeof(value_t), a, b, c);
+    imts_init_root(&imts[3], a, b, c, 512, zero_fill, 0);
+    imts_init_child(&imts[2], &imts[3], 128, 0);
+    imts_init_child(&imts[1], &imts[2], 32, 0);
+    imts_init_child(&imts[0], &imts[1], 8, 0);
 
-    index_a = PyTuple_New(2);
-    index_b = PyTuple_New(2);
-    index_c = PyTuple_New(2);
+    ta.row_stride = a->row_stride;
+    ta.col_stride = a->col_stride;
+    tb.row_stride = b->row_stride;
+    tb.col_stride = b->col_stride;
+    tc.row_stride = c->row_stride;
+    tc.col_stride = c->col_stride;
 
-    imts_initialize_root(&imts[2], a, b, c, 512);
-    imts_initialize_child(&imts[1], &imts[2], 128);
-    imts_initialize_child(&imts[0], &imts[1], 32);
-
-    while (imts_get_work(&imts[0], &m, &k, &n, &zf))
+    while (imts_get_work(&imts[0], &m, &k, &n, &zero_fill))
     {
-        // slice_m <- m:min(m+imts.tile_len, imts.until_m)
-        t0 = PyLong_FromSize_t(m);
-        t1 = PyLong_FromSize_t(m + imts[0].tile_size <= imts[0].until_m
-            ? m + imts[0].tile_size
-            : imts[0].until_m
-        );
-        slice_m = PySlice_New(t0, t1, NULL);
-        Py_DECREF(t0);
-        Py_DECREF(t1);
+        if (m + imts[0].tile_size <= imts[0].until_m
+            && k + imts[0].tile_size <= imts[0].until_k
+            && n + imts[0].tile_size <= imts[0].until_n)
+        {
+            impl_ptr = zero_fill
+                ? &_impl_sequential_asm_x1_x1_x1_zf
+                : &_impl_sequential_asm_x1_x1_x1;
 
-        // slice_k <- k:min(k+imts.tile_len, imts.until_k)
-        t0 = PyLong_FromSize_t(k);
-        t1 = PyLong_FromSize_t(k + imts[0].tile_size <= imts[0].until_k
-            ? k + imts[0].tile_size
-            : imts[0].until_k
-        );
-        slice_k = PySlice_New(t0, t1, NULL);
-        Py_DECREF(t0);
-        Py_DECREF(t1);
+            (*impl_ptr)(
+                &((float *) (a->data + m * a->row_stride))[k],
+                &((float *) (b->data + k * b->row_stride))[n],
+                &((float *) (c->data + m * c->row_stride))[n],
+                a->row_stride,
+                b->row_stride,
+                c->row_stride
+            );
+        }
+        else
+        {
+            ta.data = &((float *) (a->data + m * a->row_stride))[k];
+            tb.data = &((float *) (b->data + k * b->row_stride))[n];
+            tc.data = &((float *) (c->data + m * c->row_stride))[n];
 
-        // slice_n <- n:min(n+imts.tile_len, imts.until_n)
-        t0 = PyLong_FromSize_t(n);
-        t1 = PyLong_FromSize_t(n + imts[0].tile_size <= imts[0].until_n
-            ? n + imts[0].tile_size
-            : imts[0].until_n
-        );
-        slice_n = PySlice_New(t0, t1, NULL);
-        Py_DECREF(t0);
-        Py_DECREF(t1);
+            ta.num_rows = imts[0].tile_size;
+            ta.num_cols = imts[0].tile_size;
+            tb.num_cols = imts[0].tile_size;
+            if (m + ta.num_rows > imts[0].until_m)
+                ta.num_rows = imts[0].until_m - m;
+            if (k + ta.num_cols > imts[0].until_k)
+                ta.num_cols = imts[0].until_k - k;
+            if (n + tb.num_cols > imts[0].until_n)
+                tb.num_cols = imts[0].until_n - n;
 
-        // index_a <- (slice_m, slice_k)
-        PyTuple_SET_ITEM(index_a, 0, slice_m);
-        PyTuple_SET_ITEM(index_a, 1, slice_k);
-        
-        // index_b <- (slice_k, slice_n)
-        PyTuple_SET_ITEM(index_b, 0, slice_k);
-        PyTuple_SET_ITEM(index_b, 1, slice_n);
-        
-        // index_c <- (slice_m, slice_n)
-        PyTuple_SET_ITEM(index_c, 0, slice_m);
-        PyTuple_SET_ITEM(index_c, 1, slice_n);
+            tb.num_rows = ta.num_cols;
+            tc.num_rows = ta.num_rows;
+            tc.num_cols = tb.num_cols;
 
-        (*impl_sequential[26])(
-            (PyArrayObject *) PyObject_GetItem((PyObject *) a, index_a),
-            (PyArrayObject *) PyObject_GetItem((PyObject *) b, index_b),
-            (PyArrayObject *) PyObject_GetItem((PyObject *) c, index_c),
-            zf
-        );
-
-        Py_DECREF(slice_m);
-        Py_DECREF(slice_k);
-        Py_DECREF(slice_n);
+            (*impl_sequential[sv_x1_x1_x1])(&ta, &tb, &tc, zero_fill);
+        }
     }
-
-    Py_DECREF(index_a);
-    Py_DECREF(index_b);
-    Py_DECREF(index_c);
 }
+
+
+static void impl_abort(matrix_t *a, matrix_t *b, matrix_t *c, int zero_fill)
+{
+    abort();
+}
+
+
+const impl_imts_sequential_t impl_imts_sequential[27] = {
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_x1_x1_x1,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+};
+
+const impl_imts_sequential_asm_t impl_imts_sequential_asm[27] = {
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_x1_x1_x1_asm,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+    &impl_abort,
+};

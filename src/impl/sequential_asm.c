@@ -6,15 +6,6 @@
 #include "sequential.h"
 
 
-typedef void _impl_asm_t(
-    float *ptr_a, float *ptr_b, float *ptr_c,
-    ssize_t stride_a, ssize_t stride_b, ssize_t stride_c
-);
-
-extern _impl_asm_t _impl_sequential_asm_x1_x1_x1;
-extern _impl_asm_t _impl_sequential_asm_x1_x1_x1_zf;
-
-
 static void impl_x1_x1_x1(matrix_t *a, matrix_t *b, matrix_t *c, int zero_fill)
 {
 #define matrix_at(m, row, col) \

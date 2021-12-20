@@ -4,14 +4,22 @@
 #include <Python.h>
 
 
-PyObject *api_dot_imts_impl(PyObject *self, PyObject *args);
+PyObject *api_dot_imts_sequential_impl(PyObject *self, PyObject *args);
+PyObject *api_dot_imts_sequential_asm_impl(PyObject *self, PyObject *args);
 
 
-const static struct PyMethodDef api_dot_imts = {
-    .ml_name = "dot_imts",
+const static struct PyMethodDef api_dot_imts_sequential = {
+    .ml_name = "dot_imts_sequential",
     .ml_doc = "Sequential matrix multiplication using IMTS.",
     .ml_flags = METH_VARARGS,
-    .ml_meth = &api_dot_imts_impl,
+    .ml_meth = &api_dot_imts_sequential_impl,
+};
+
+const static struct PyMethodDef api_dot_imts_sequential_asm = {
+    .ml_name = "dot_imts_sequential_asm",
+    .ml_doc = "Sequential ASM matrix multiplication using IMTS.",
+    .ml_flags = METH_VARARGS,
+    .ml_meth = &api_dot_imts_sequential_asm_impl,
 };
 
 

@@ -7,7 +7,7 @@ def run_subtest(name, m, k, n):
     op_a = np.random.random((m, k)).astype(np.float32)
     op_b = np.random.random((k, n)).astype(np.float32)
 
-    res_obtained = dotopt.dot_asm(op_a, op_b)
+    res_obtained = dotopt.dot_imts_sequential(op_a, op_b)
     res_expected = np.dot(op_a, op_b)
     assert np.allclose(res_obtained, res_expected)
     print('  Success!')

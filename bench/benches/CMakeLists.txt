@@ -1,11 +1,12 @@
 set(SRCS
+    imts.cpp
     sequential.cpp
     sequential_asm.cpp
 )
 set(LIBS
     benchmark::benchmark
 
-    ${PROJECT_NAME}-impl
+    ${PROJECT_NAME}
 )
 
 add_library(${PROJECT_NAME}-bench-benches STATIC ${SRCS})

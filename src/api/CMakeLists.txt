@@ -1,9 +1,8 @@
 set(SRCS
     api.c
-    asm.c
     imts.c
-    openmp.c
     sequential.c
+    sequential_asm.c
 )
 set(LIBS
   PRIVATE

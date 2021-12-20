@@ -13,7 +13,7 @@ static void impl_x1_x1_x1(matrix_t *a, matrix_t *b, matrix_t *c, int zero_fill)
     for (m = 0; m < a->num_rows; m++)
         for (k = 0; k < a->num_cols; k++)
         {
-            if (k == 0)
+            if (zero_fill && k == 0)
                 for (n = 0; n < b->num_cols; n++)
                     matrix_at(c, m, n) = (float) 0;
 

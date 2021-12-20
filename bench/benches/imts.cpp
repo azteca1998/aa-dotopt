@@ -1,50 +1,93 @@
 #include "imts.hpp"
 
 #include <cstdlib>
-#include <numpy/arrayobject.h>
-#include <Python.h>
 
 #include "../../src/impl/imts.h"
+#include "../../src/impl/util.h"
 
 
-void bench_imts(benchmark::State &state)
+void bench_imts_sequential(benchmark::State &state)
 {
-    PyObject *a, *b, *c;
-    npy_intp tmp_dims[2];
+    matrix_t a, b, c;
 
-    tmp_dims[0] = state.range();
-    tmp_dims[1] = state.range();
+    a.data = new float[state.range() * state.range()];
+    a.num_rows = state.range();
+    a.num_cols = state.range();
+    a.row_stride = sizeof(float) * state.range();
+    a.col_stride = sizeof(float);
 
-    a = PyArray_SimpleNew(2, tmp_dims, PyArray_FLOAT32);
-    b = PyArray_SimpleNew(2, tmp_dims, PyArray_FLOAT32);
-    c = PyArray_SimpleNew(2, tmp_dims, PyArray_FLOAT32);
+    b.data = new float[state.range() * state.range()];
+    b.num_rows = state.range();
+    b.num_cols = state.range();
+    b.row_stride = sizeof(float) * state.range();
+    b.col_stride = sizeof(float);
+
+    c.data = new float[state.range() * state.range()];
+    c.num_rows = state.range();
+    c.num_cols = state.range();
+    c.row_stride = sizeof(float) * state.range();
+    c.col_stride = sizeof(float);
 
     for (size_t i = 0; i < state.range() * state.range(); i++)
     {
-        ((float *) PyArray_DATA(a))[i] = (float) drand48() - 0.5f;
-        ((float *) PyArray_DATA(b))[i] = (float) drand48() - 0.5f;
+        reinterpret_cast<float *>(a.data)[i] = (float) drand48() - 0.5f;
+        reinterpret_cast<float *>(b.data)[i] = (float) drand48() - 0.5f;
     }
 
-    sequential_version_t sv = sv_find_version(
-        sizeof(float),
-        reinterpret_cast<PyArrayObject *>(a),
-        reinterpret_cast<PyArrayObject *>(b),
-        reinterpret_cast<PyArrayObject *>(c)
-    );
+    sequential_version_t sv = sv_find_version(sizeof(float), &a, &b, &c);
 
     benchmark::ClobberMemory();
 
     for (auto _ : state)
-        impl_imts(
-            reinterpret_cast<PyArrayObject *>(a),
-            reinterpret_cast<PyArrayObject *>(b),
-            reinterpret_cast<PyArrayObject *>(c)
-        );
+        (*impl_imts_sequential[sv])(&a, &b, &c, 1);
 
     benchmark::ClobberMemory();
 
     // Clean up.
-    Py_DECREF(a);
-    Py_DECREF(b);
-    Py_DECREF(c);
+    delete[] reinterpret_cast<float *>(a.data);
+    delete[] reinterpret_cast<float *>(b.data);
+    delete[] reinterpret_cast<float *>(c.data);
+}
+
+void bench_imts_sequential_asm(benchmark::State &state)
+{
+    matrix_t a, b, c;
+
+    a.data = new float[state.range() * state.range()];
+    a.num_rows = state.range();
+    a.num_cols = state.range();
+    a.row_stride = sizeof(float) * state.range();
+    a.col_stride = sizeof(float);
+
+    b.data = new float[state.range() * state.range()];
+    b.num_rows = state.range();
+    b.num_cols = state.range();
+    b.row_stride = sizeof(float) * state.range();
+    b.col_stride = sizeof(float);
+
+    c.data = new float[state.range() * state.range()];
+    c.num_rows = state.range();
+    c.num_cols = state.range();
+    c.row_stride = sizeof(float) * state.range();
+    c.col_stride = sizeof(float);
+
+    for (size_t i = 0; i < state.range() * state.range(); i++)
+    {
+        reinterpret_cast<float *>(a.data)[i] = (float) drand48() - 0.5f;
+        reinterpret_cast<float *>(b.data)[i] = (float) drand48() - 0.5f;
+    }
+
+    sequential_version_t sv = sv_find_version(sizeof(float), &a, &b, &c);
+
+    benchmark::ClobberMemory();
+
+    for (auto _ : state)
+        (*impl_imts_sequential_asm[sv])(&a, &b, &c, 1);
+
+    benchmark::ClobberMemory();
+
+    // Clean up.
+    delete[] reinterpret_cast<float *>(a.data);
+    delete[] reinterpret_cast<float *>(b.data);
+    delete[] reinterpret_cast<float *>(c.data);
 }
