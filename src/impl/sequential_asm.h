@@ -20,7 +20,7 @@
 typedef void (*impl_sequential_asm_t)(matrix_t *, matrix_t *, matrix_t *, int);
 
 
-extern const impl_sequential_asm_t impl_sequential_asm[27];
+extern const impl_sequential_asm_t impl_sequential_asm[28];
 
 
 /* BEGIN: Internal API */
@@ -28,9 +28,13 @@ typedef void _impl_asm_t(
     float *ptr_a, float *ptr_b, float *ptr_c,
     size_t stride_a, size_t stride_b, size_t stride_c
 );
+typedef void _impl_asm_zorder_t(float *ptr_a, float *ptr_b, float *ptr_c);
 
 extern _impl_asm_t _impl_sequential_asm_x1_x1_x1;
 extern _impl_asm_t _impl_sequential_asm_x1_x1_x1_zf;
+
+extern _impl_asm_zorder_t _impl_sequential_asm_zz_zz_zz;
+extern _impl_asm_zorder_t _impl_sequential_asm_zz_zz_zz_zf;
 /* END: Internal API */
 
 

@@ -7,6 +7,9 @@
 PyObject *api_dot_imts_sequential_impl(PyObject *self, PyObject *args);
 PyObject *api_dot_imts_sequential_asm_impl(PyObject *self, PyObject *args);
 
+PyObject *api_dot_imts_sequential_zorder_impl(PyObject *self, PyObject *args);
+PyObject *api_dot_imts_sequential_asm_zorder_impl(PyObject *self, PyObject *args);
+
 
 const static struct PyMethodDef api_dot_imts_sequential = {
     .ml_name = "dot_imts_sequential",
@@ -20,6 +23,20 @@ const static struct PyMethodDef api_dot_imts_sequential_asm = {
     .ml_doc = "Sequential ASM matrix multiplication using IMTS.",
     .ml_flags = METH_VARARGS,
     .ml_meth = &api_dot_imts_sequential_asm_impl,
+};
+
+const static struct PyMethodDef api_dot_imts_sequential_zorder = {
+    .ml_name = "dot_imts_sequential_zorder",
+    .ml_doc = "Sequential matrix multiplication using Z-order and IMTS.",
+    .ml_flags = METH_VARARGS,
+    .ml_meth = &api_dot_imts_sequential_asm_impl,
+};
+
+const static struct PyMethodDef api_dot_imts_sequential_asm_zorder = {
+    .ml_name = "dot_imts_sequential_asm_zorder",
+    .ml_doc = "Sequential ASM matrix multiplication using Z-order and IMTS.",
+    .ml_flags = METH_VARARGS,
+    .ml_meth = &api_dot_imts_sequential_asm_zorder_impl,
 };
 
 

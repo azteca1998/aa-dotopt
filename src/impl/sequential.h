@@ -14,7 +14,7 @@
  */
 typedef void (*impl_sequential_t)(matrix_t *, matrix_t *, matrix_t *, int);
 
-extern const impl_sequential_t impl_sequential[27];
+extern const impl_sequential_t impl_sequential[28];
 
 
 #endif /* DOTOPT__IMPL__SEQUENTIAL_H */

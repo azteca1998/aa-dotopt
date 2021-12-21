@@ -41,8 +41,8 @@ typedef void (*impl_imts_sequential_asm_t)(
 );
 
 
-extern const impl_imts_sequential_t impl_imts_sequential[27];
-extern const impl_imts_sequential_asm_t impl_imts_sequential_asm[27];
+extern const impl_imts_sequential_t impl_imts_sequential[28];
+extern const impl_imts_sequential_asm_t impl_imts_sequential_asm[28];
 
 
 #endif /* DOTOPT__IMPL__IMTS_H */

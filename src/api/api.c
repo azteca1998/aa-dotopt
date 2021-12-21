@@ -12,8 +12,12 @@ static struct PyMethodDef methods[] = {
 #ifndef __INTELLISENSE__ // IntelliSense for C/C++ marks this as an error.
     api_dot_imts_sequential,
     api_dot_imts_sequential_asm,
+    api_dot_imts_sequential_zorder,
+    api_dot_imts_sequential_asm_zorder,
     api_dot_sequential,
     api_dot_sequential_asm,
+    api_dot_sequential_asm_zorder,
+    api_dot_sequential_zorder,
 #endif
     { NULL, NULL, 0, NULL },
 };

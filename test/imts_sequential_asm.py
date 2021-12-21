@@ -13,8 +13,6 @@ def run_subtest(name, m, k, n):
     print('  Success!')
 
 
-np.set_printoptions(precision=2, linewidth=120, formatter={'float_kind': '{:0.2f}'.format})
-
 run_subtest('(8,8,8)', 8, 8, 8)
 
 run_subtest('(16,8,8)', 16, 8, 8)

@@ -13,6 +13,22 @@ def run_subtest(name, m, k, n):
     print('  Success!')
 
 
-run_subtest('A', 8, 8, 8)
-# run_subtest('B', 8, 8, 12)
-# run_subtest('C', 100, 200, 100)
+run_subtest('(8,8,8)', 8, 8, 8)
+
+run_subtest('(16,8,8)', 16, 8, 8)
+run_subtest('(8,16,8)', 8, 16, 8)
+run_subtest('(16,16,8)', 16, 16, 8)
+run_subtest('(8,8,16)', 8, 8, 16)
+run_subtest('(16,8,16)', 16, 8, 16)
+run_subtest('(8,16,16)', 8, 16, 16)
+run_subtest('(16,16,16)', 16, 16, 16)
+
+run_subtest('(12,8,8)', 12, 8, 8)
+run_subtest('(8,12,8)', 8, 12, 8)
+run_subtest('(12,12,8)', 12, 12, 8)
+run_subtest('(8,8,12)', 8, 8, 12)
+run_subtest('(12,8,12)', 12, 8, 12)
+run_subtest('(8,12,12)', 8, 12, 12)
+run_subtest('(8,12,12)', 12, 12, 12)
+
+run_subtest('(100,200,100)', 100, 200, 100)

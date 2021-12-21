@@ -70,6 +70,8 @@ typedef enum sequential_version
     sv_xx_xx_1x = 0x18, /* (x,x) (x,x) (1,x) |  ??F  */
     sv_xx_xx_x1 = 0x19, /* (x,x) (x,x) (x,1) |  ??C  */
     sv_xx_xx_xx = 0x1A, /* (x,x) (x,x) (x,x) |  ???  */
+
+    sv_zz_zz_zz = 0x1B, /*   Z-Order Curve   |  ZZZ  */
 } sequential_version_t;
 
 
