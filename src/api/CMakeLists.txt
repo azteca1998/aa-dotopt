@@ -6,6 +6,7 @@ set(SRCS
 )
 set(LIBS
   PRIVATE
+    OpenMP::OpenMP_C
     Python3::Module
     Python3::NumPy
 )

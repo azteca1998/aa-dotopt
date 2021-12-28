@@ -46,6 +46,7 @@ void imts_init_child(imts_t *self, imts_t *parent, size_t tile_size, int is_mt)
 int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n, int *zf)
 {
     int tmp;
+    int ret = 1;
 
     if ((self->flags & 0x04) == 0)
     {
@@ -57,13 +58,13 @@ int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n, int *zf)
             if (self->parent == NULL)
                 return 0;
 
-            if (imts_get_work(
+            if ((ret = imts_get_work(
                 self->parent,
                 &self->pos_m,
                 &self->pos_k,
                 &self->pos_n,
                 &tmp
-            ) == 0)
+            )) == 0)
                 return 0;
 
             self->since_m = self->pos_m;
@@ -194,6 +195,8 @@ int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n, int *zf)
                 self->pos_n = self->since_n;
             else
                 self->pos_n -= self->tile_size;
+
+            ret = 2;
         }
 
         // Iterate over K.
@@ -206,8 +209,10 @@ int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n, int *zf)
                 self->pos_m = self->since_m;
             else
                 self->pos_m -= self->tile_size;
+
+            ret = 2;
         }
     }
 
-    return 1;
+    return ret;
 }

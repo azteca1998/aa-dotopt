@@ -5,6 +5,7 @@ set(SRCS
 )
 set(LIBS
     benchmark::benchmark
+    OpenMP::OpenMP_CXX
 
     ${PROJECT_NAME}
 )

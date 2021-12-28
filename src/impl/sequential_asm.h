@@ -21,6 +21,7 @@ typedef void (*impl_sequential_asm_t)(matrix_t *, matrix_t *, matrix_t *, int);
 
 
 extern const impl_sequential_asm_t impl_sequential_asm[28];
+extern const impl_sequential_asm_t impl_omp_loops_sequential_asm[28];
 
 
 /* BEGIN: Internal API */

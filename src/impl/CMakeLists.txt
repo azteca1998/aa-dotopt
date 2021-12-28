@@ -8,7 +8,7 @@ set(SRCS
 )
 set(LIBS
   PRIVATE
-    # OpenMP::OpenMP_C
+    OpenMP::OpenMP_C
 )
 
 add_library(${PROJECT_NAME}-impl OBJECT ${SRCS})
