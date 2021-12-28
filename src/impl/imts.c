@@ -201,9 +201,9 @@ static void impl_zz_zz_zz_asm(
         }
         else
         {
-            ta.data = &((float *) (a->data + m * a->row_stride))[k];
-            tb.data = &((float *) (b->data + k * b->row_stride))[n];
-            tc.data = &((float *) (c->data + m * c->row_stride))[n];
+            ta.data = &zorder_at(a->data, m, k);
+            tb.data = &zorder_at(b->data, k, n);
+            tc.data = &zorder_at(c->data, m, n);
 
             ta.num_rows = imts[0].tile_size;
             ta.num_cols = imts[0].tile_size;
@@ -219,7 +219,7 @@ static void impl_zz_zz_zz_asm(
             tc.num_rows = ta.num_rows;
             tc.num_cols = tb.num_cols;
 
-            (*impl_sequential[sv_zz_zz_zz])(&ta, &tb, &tc, zero_fill);
+            (*impl_sequential_asm[sv_zz_zz_zz])(&ta, &tb, &tc, zero_fill);
         }
     }
 }
