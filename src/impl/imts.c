@@ -377,12 +377,12 @@ static void impl_omp_tasks_x1_x1_x1_asm(
         tc.row_stride = c->row_stride;
         tc.col_stride = c->col_stride;
 
-        ret = imts_get_work(&imts[0], &m, &k, &n, &zero_fill);
-        if (ret != 0)
+        do
         {
             do
             {
-                do
+                ret = imts_get_work(&imts[0], &m, &k, &n, &zero_fill);
+                if (ret != 0)
                 {
                     if (m + imts[0].tile_size <= imts[0].until_m
                         && k + imts[0].tile_size <= imts[0].until_k
@@ -426,12 +426,12 @@ static void impl_omp_tasks_x1_x1_x1_asm(
                         (*impl_sequential[sv_x1_x1_x1])(&ta, &tb, &tc, zero_fill);
                     }
                 }
-                while ((ret = imts_get_work(&imts[0], &m, &k, &n, &zero_fill)) == 1);
-
-                #pragma omp taskwait
             }
-            while (ret);
+            while (ret == 1);
+
+            #pragma omp taskwait
         }
+        while (ret);
     }
 }
 
@@ -462,12 +462,12 @@ static void impl_omp_tasks_zz_zz_zz_asm(
         tc.row_stride = c->row_stride;
         tc.col_stride = c->col_stride;
 
-        ret = imts_get_work(&imts[0], &m, &k, &n, &zero_fill);
-        if (ret != 0)
+        do
         {
             do
             {
-                do
+                ret = imts_get_work(&imts[0], &m, &k, &n, &zero_fill);
+                if (ret != 0)
                 {
                     if (m + imts[0].tile_size <= imts[0].until_m
                         && k + imts[0].tile_size <= imts[0].until_k
@@ -508,12 +508,12 @@ static void impl_omp_tasks_zz_zz_zz_asm(
                         (*impl_sequential_asm[sv_zz_zz_zz])(&ta, &tb, &tc, zero_fill);
                     }
                 }
-                while ((imts_get_work(&imts[0], &m, &k, &n, &zero_fill)) == 1);
-
-                #pragma omp taskwait
             }
-            while (ret);
+            while (ret == 1);
+
+            #pragma omp taskwait
         }
+        while (ret);
     }
 }
 

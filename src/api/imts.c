@@ -348,7 +348,7 @@ PyObject *api_dot_imts_sequential_asm_omp_tasks_impl(
 
     sv = sv_find_version(sizeof(float), &a, &b, &c);
     #pragma omp parallel
-    (*impl_imts_sequential_asm[sv])(&a, &b, &c, 1);
+    (*impl_omp_tasks_imts_sequential_asm[sv])(&a, &b, &c, 1);
 
     return (PyObject *) op_c;
 }
@@ -496,7 +496,7 @@ PyObject *api_dot_imts_sequential_asm_omp_tasks_zorder_impl(
     tc = tmp;
 
     #pragma omp parallel
-    (*impl_imts_sequential_asm[sv_zz_zz_zz])(&a, &b, &c, 1);
+    (*impl_omp_tasks_imts_sequential_asm[sv_zz_zz_zz])(&a, &b, &c, 1);
 
     tmp = a.data;
     a.data = ta;
