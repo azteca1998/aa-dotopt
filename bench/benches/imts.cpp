@@ -459,7 +459,7 @@ void bench_imts_sequential_omp_tasks_zorder(benchmark::State &state)
     c.data = tc;
     tc = tmp;
 
-    #pragma omp tasks
+    #pragma omp parallel
     {
         benchmark::ClobberMemory();
 

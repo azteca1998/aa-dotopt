@@ -250,12 +250,12 @@ static void impl_omp_tasks_x1_x1_x1(
         tc.row_stride = c->row_stride;
         tc.col_stride = c->col_stride;
 
-        ret = imts_get_work(&imts[0], &m, &k, &n, &zero_fill);
-        if (ret != 0)
+        do
         {
             do
             {
-                do
+                ret = imts_get_work(&imts[0], &m, &k, &n, &zero_fill);
+                if (ret != 0)
                 {
                     ta.data = &((float *) (a->data + m * a->row_stride))[k];
                     tb.data = &((float *) (b->data + k * b->row_stride))[n];
@@ -278,12 +278,12 @@ static void impl_omp_tasks_x1_x1_x1(
                     #pragma omp task
                     (*impl_sequential[sv_x1_x1_x1])(&ta, &tb, &tc, zero_fill);
                 }
-                while ((ret = imts_get_work(&imts[0], &m, &k, &n, &zero_fill)) == 1);
-
-                #pragma omp taskwait
             }
-            while (ret);
+            while (ret == 1);
+
+            #pragma omp taskwait
         }
+        while (ret);
     }
 }
 
@@ -312,12 +312,12 @@ static void impl_omp_tasks_zz_zz_zz(
         tc.row_stride = c->row_stride;
         tc.col_stride = c->col_stride;
 
-        ret = imts_get_work(&imts[0], &m, &k, &n, &zero_fill);
-        if (ret != 0)
+        do
         {
             do
             {
-                do
+                ret = imts_get_work(&imts[0], &m, &k, &n, &zero_fill);
+                if (ret != 0)
                 {
                     ta.data = &zorder_at(a->data, m, k);
                     tb.data = &zorder_at(b->data, k, n);
@@ -340,12 +340,12 @@ static void impl_omp_tasks_zz_zz_zz(
                     #pragma omp task
                     (*impl_sequential[sv_zz_zz_zz])(&ta, &tb, &tc, zero_fill);
                 }
-                while ((ret = imts_get_work(&imts[0], &m, &k, &n, &zero_fill)) == 1);
-
-                #pragma omp taskwait
             }
-            while (ret);
+            while (ret == 1);
+
+            #pragma omp taskwait
         }
+        while (ret);
     }
 }
 
