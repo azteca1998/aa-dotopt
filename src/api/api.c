@@ -4,6 +4,7 @@
 #include <numpy/arrayobject.h>
 
 #include "imts.h"
+#include "scheduler.h"
 #include "sequential.h"
 #include "sequential_asm.h"
 
@@ -18,6 +19,8 @@ static struct PyMethodDef methods[] = {
     api_dot_imts_sequential_omp_tasks,
     api_dot_imts_sequential_omp_tasks_zorder,
     api_dot_imts_sequential_zorder,
+    api_dot_scheduler,
+    api_dot_scheduler_asm,
     api_dot_sequential,
     api_dot_sequential_asm,
     api_dot_sequential_asm_omp_loops,

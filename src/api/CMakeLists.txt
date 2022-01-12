@@ -1,6 +1,7 @@
 set(SRCS
     api.c
     imts.c
+    scheduler.c
     sequential.c
     sequential_asm.c
 )

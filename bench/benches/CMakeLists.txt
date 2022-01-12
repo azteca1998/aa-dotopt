@@ -1,5 +1,6 @@
 set(SRCS
     imts.cpp
+    scheduler.cpp
     sequential.cpp
     sequential_asm.cpp
 )

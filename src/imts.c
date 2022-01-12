@@ -10,7 +10,7 @@ void imts_init_root(
     matrix_t *c,
     size_t tile_size,
     int zero_fill,
-    int is_mt
+    int n_cpus
 )
 {
     memset(self, 0x00, sizeof(imts_t));
@@ -25,11 +25,18 @@ void imts_init_root(
     self->tile_size = tile_size;
     if (zero_fill)
         self->flags |= 0x08;
-    if (is_mt)
+    if (n_cpus)
+    {
+        pthread_mutex_init(&self->lock, NULL);
+        pthread_cond_init(&self->cond, NULL);
+        self->should_wait = 0;
+        self->n_wait = n_cpus;
+
         self->flags |= 0x04;
+    }
 }
 
-void imts_init_child(imts_t *self, imts_t *parent, size_t tile_size, int is_mt)
+void imts_init_child(imts_t *self, imts_t *parent, size_t tile_size, int n_cpus)
 {
     memset(self, 0x00, sizeof(imts_t));
     self->parent = parent;
@@ -39,8 +46,15 @@ void imts_init_child(imts_t *self, imts_t *parent, size_t tile_size, int is_mt)
     self->c = parent->c;
 
     self->tile_size = tile_size;
-    if (is_mt)
+    if (n_cpus)
+    {
+        pthread_mutex_init(&self->lock, NULL);
+        pthread_cond_init(&self->cond, NULL);
+        self->should_wait = 0;
+        self->n_wait = n_cpus;
+
         self->flags |= 0x04;
+    }
 }
 
 int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n, int *zf)
@@ -133,12 +147,33 @@ int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n, int *zf)
     else
     {
         // Multi-threaded version: Equivalent to KMN.
+        pthread_mutex_lock(&self->lock);
+
+        // Maybe wait computations.
+        if (self->should_wait)
+        {
+            self->n_wait--;
+            if (self->n_wait)
+                pthread_cond_wait(&self->cond, &self->lock);
+            else
+            {
+                self->should_wait = 0;
+                pthread_cond_broadcast(&self->cond);
+            }
+            self->n_wait++;
+
+            if (self->should_wait)
+                self->should_wait = 0;
+        }
 
         // Check if done and maybe fetch work from parent.
         if (self->pos_k >= self->until_k)
         {
             if (self->parent == NULL)
+            {
+                pthread_mutex_unlock(&self->lock);
                 return 0;
+            }
 
             if (imts_get_work(
                 self->parent,
@@ -147,7 +182,10 @@ int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n, int *zf)
                 &self->pos_n,
                 &tmp
             ) == 0)
+            {
+                pthread_mutex_unlock(&self->lock);
                 return 0;
+            }
 
             self->since_m = self->pos_m;
             self->since_k = self->pos_k;
@@ -195,8 +233,6 @@ int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n, int *zf)
                 self->pos_n = self->since_n;
             else
                 self->pos_n -= self->tile_size;
-
-            ret = 2;
         }
 
         // Iterate over K.
@@ -210,8 +246,11 @@ int imts_get_work(imts_t *self, size_t *m, size_t *k, size_t *n, int *zf)
             else
                 self->pos_m -= self->tile_size;
 
+            self->should_wait = 1;
             ret = 2;
         }
+
+        pthread_mutex_unlock(&self->lock);
     }
 
     return ret;

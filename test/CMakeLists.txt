@@ -14,6 +14,8 @@ add_python_test(dot_imts_sequential_asm_omp_tasks_zorder    imts_sequential_asm_
 add_python_test(dot_imts_sequential_omp_tasks               imts_sequential_omp_tasks.py)
 add_python_test(dot_imts_sequential_omp_tasks_zorder        imts_sequential_omp_tasks_zorder.py)
 add_python_test(dot_imts_sequential_zorder                  imts_sequential_zorder.py)
+add_python_test(dot_scheduler                               scheduler.py)
+add_python_test(dot_scheduler_asm                           scheduler_asm.py)
 add_python_test(dot_sequential                              sequential.py)
 add_python_test(dot_sequential_asm                          sequential_asm.py)
 add_python_test(dot_sequential_asm_omp_loops                sequential_asm_omp_loops.py)
