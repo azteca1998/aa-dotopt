@@ -1,4 +1,4 @@
-# DotOpt
+# DotOpt - Optimized matrix multiplication
 
 ## Development environment configuration
 
@@ -82,24 +82,24 @@ sudo cpupower frequency-set --governor <previous governor>
 
 **GPU using Vulkan compute shaders**
 
-  16. A GPU version where each thread computes an output.
-  17. A tiling GPU version where each thread computes a 4x4 tile (GLSL).
-  18. A tiling GPU version where each SM computes a tile using the shared memory
+  16. (Not implemented) A GPU version where each thread computes an output.
+  17. (Not implemented) A tiling GPU version where each thread computes a 4x4 tile (GLSL).
+  18. (Not implemented) A tiling GPU version where each SM computes a tile using the shared memory
     as a scratchpad for inputs and/or outputs.
 
 **GPU using OpenCL (if we can make it work)**
 
-  19. Same as #16.
-  20. Same as #17.
-  21. Same as #18.
+  19. (Not implemented) Same as #16.
+  20. (Not implemented) Same as #17.
+  21. (Not implemented) Same as #18.
 
 **External implementations (for reference when comparing)**
 
-  22. NumPy implementation.
-  23. TensorFlow implementation.
-  24. OpenBLAS (maybe?).
-  25. clBLAS (maybe?).
-  25. ArrayFire (OpenCL; maybe?).
+  22. (Testing only) NumPy implementation.
+  23. (Not used) TensorFlow implementation.
+  24. (Not used) OpenBLAS (maybe?).
+  25. (Not used) clBLAS (maybe?).
+  25. (Not used) ArrayFire (OpenCL; maybe?).
 
 ### Intelligent Multilevel Tiling Scheduler
 
